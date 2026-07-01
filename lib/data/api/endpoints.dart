@@ -1,9 +1,7 @@
 class Endpoints {
-  static const String baseUrl = "https://fakestoreapi.com";
+  static const String baseUrl = "https://www.themealdb.com/api/json/v1/1";
 
-  // Gets the master list of all products
-  static const String products = "$baseUrl/products";
+  static const String categories = "$baseUrl/list.php?c=list";
 
-  // Gets just the categories
-  static const String categories = "$baseUrl/products/categories";
+  static String mealsByCategory(String category) => "$baseUrl/filter.php?c=$category";
 }
