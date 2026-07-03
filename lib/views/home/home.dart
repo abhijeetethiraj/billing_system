@@ -1,4 +1,5 @@
 import 'package:billing_system/viewmodels/home_viewmodel.dart';
+import 'package:billing_system/views/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -125,38 +126,45 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 25),
 
                     /// SEARCH BAR
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      height: 55,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade100,
-                        borderRadius: BorderRadius.circular(30),
-                      ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.search),
+                    /// SEARCH BAR
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const SearchPage()),
+                        );
+                      },
+                      child: AbsorbPointer(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          height: 55,
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade100,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: Row(
+                            children: [
+                              const Icon(Icons.search),
 
-                          const SizedBox(width: 10),
+                              const SizedBox(width: 10),
 
-                          Expanded(
-                            child: TextField(
-                              decoration: const InputDecoration(
-                                border: InputBorder.none,
-                                hintText: "What are you craving?",
+                              const Expanded(
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: "What are you craving?",
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
 
-                          CircleAvatar(
-                            radius: 18,
-                            backgroundColor: Colors.white,
-                            child: IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {},
-                              icon: const Icon(Icons.tune, size: 18),
-                            ),
+                              CircleAvatar(
+                                radius: 18,
+                                backgroundColor: Colors.white,
+                                child: Icon(Icons.tune, size: 18),
+                              ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
 

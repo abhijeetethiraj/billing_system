@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:billing_system/models/meal_model.dart';
 
 class FoodCard extends StatelessWidget {
-  final Map<String, dynamic> food;
+  final Meal meal;
   final VoidCallback? onTap;
   final VoidCallback? onAddToCart;
 
-  const FoodCard({
-    super.key,
-    required this.food,
-    this.onTap,
-    this.onAddToCart,
-  });
+  const FoodCard({super.key, required this.meal, this.onTap, this.onAddToCart});
 
   @override
   Widget build(BuildContext context) {
@@ -37,35 +33,31 @@ class FoodCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-
             //================ IMAGE =================
-
             Stack(
               children: [
-
                 ClipRRect(
                   borderRadius: const BorderRadius.vertical(
                     top: Radius.circular(20),
                   ),
 
-                  child: food["image"] != null
-                      ? Image.asset(
-                          food["image"],
-                          height: 150,
-                          width: double.infinity,
-                          fit: BoxFit.cover,
-                        )
-                      : Container(
-                          height: 150,
-                          width: double.infinity,
-                          color: const Color(0xFFFFF3E0),
-
-                          child: const Icon(
-                            Icons.fastfood,
-                            size: 60,
-                            color: Colors.deepOrange,
-                          ),
+                  child: Image.network(
+                    meal.strMealThumb,
+                    height: 150,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 150,
+                        color: Colors.grey.shade200,
+                        child: const Icon(
+                          Icons.fastfood,
+                          size: 60,
+                          color: Colors.deepOrange,
                         ),
+                      );
+                    },
+                  ),
                 ),
 
                 Positioned(
@@ -80,17 +72,13 @@ class FoodCard extends StatelessWidget {
                       shape: BoxShape.circle,
                     ),
 
-                    child: const Icon(
-                      Icons.favorite_border,
-                      size: 20,
-                    ),
+                    child: const Icon(Icons.favorite_border, size: 20),
                   ),
                 ),
               ],
             ),
 
             //================ DETAILS =================
-
             Padding(
               padding: const EdgeInsets.all(14),
 
@@ -98,9 +86,8 @@ class FoodCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
 
                 children: [
-
                   Text(
-                    food["name"] ?? "",
+                    meal.strMeal,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
 
@@ -113,43 +100,32 @@ class FoodCard extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   Text(
-                    food["restaurant"] ?? "",
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                    ),
+                    "Restaurant",
+                    style: const TextStyle(color: Colors.grey, fontSize: 14),
                   ),
 
                   const SizedBox(height: 10),
 
                   Row(
                     children: [
-
-                      const Icon(
-                        Icons.star,
-                        color: Colors.orange,
-                        size: 18,
-                      ),
+                      const Icon(Icons.star, color: Colors.orange, size: 18),
 
                       const SizedBox(width: 4),
 
                       Text(
-                        "${food["rating"] ?? 0}",
-                        style: const TextStyle(
-                          fontWeight: FontWeight.w600,
-                        ),
+                        "4.8",
+                        style: const TextStyle(fontWeight: FontWeight.w600),
                       ),
 
                       const Spacer(),
 
                       Text(
-                        "₹${food["price"] ?? 0}",
+                        "₹${120 + meal.idMeal.hashCode % 250}",
                         style: const TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                     ],
                   ),
 
@@ -175,17 +151,13 @@ class FoodCard extends StatelessWidget {
 
                       label: const Text(
                         "Add to Cart",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),
-
                 ],
               ),
             ),
-
           ],
         ),
       ),
