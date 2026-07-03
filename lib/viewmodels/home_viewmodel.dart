@@ -13,69 +13,80 @@ class HomeViewmodel extends ChangeNotifier {
 
   String errorMessage = '';
   List<Meal> meals = [];
+  Meal? featuredMeal;
 
   String selectedCategory = "";
 
-Future<void> getCategories() async {
-  isLoading = true;
-  notifyListeners();
+  Future<void> getRandomMeal() async {
+    final response = await _apiService.get(Endpoints.randomMeal);
 
-  final response = await _apiService.get(Endpoints.categories);
-
-  if (response.isSuccess) {
-    final categoryResponse = CategoryResponse.fromJson(response.data);
-
-    categories = categoryResponse.meals;
-    for (final category in categories) {
-  final mealResponse =
-      await _apiService.get(Endpoints.mealsByCategory(category.strCategory));
-
-  if (mealResponse.isSuccess) {
-    final meals = MealResponse.fromJson(mealResponse.data).meals;
-
-    if (meals.isNotEmpty) {
-      category.thumbnail = meals.first.strMealThumb;
+    if (response.isSuccess) {
+      featuredMeal = MealResponse.fromJson(response.data).meals.first;
     }
   }
-}
 
-if (categories.isNotEmpty) {
-  await getMealsByCategory(categories.first.strCategory);
-}
+  Future<void> getCategories() async {
+    isLoading = true;
+    notifyListeners();
 
-    if (categories.isNotEmpty) {
-      await getMealsByCategory(categories.first.strCategory);
+    await getRandomMeal();
+
+    final response = await _apiService.get(Endpoints.categories);
+
+    if (response.isSuccess) {
+      final categoryResponse = CategoryResponse.fromJson(response.data);
+
+      // First assign categories
+      categories = categoryResponse.meals;
+
+      // Then load thumbnail for each category
+      for (final category in categories) {
+        final mealResponse = await _apiService.get(
+          Endpoints.mealsByCategory(category.strCategory),
+        );
+
+        if (mealResponse.isSuccess) {
+          final meals = MealResponse.fromJson(mealResponse.data).meals;
+
+          if (meals.isNotEmpty) {
+            category.thumbnail = meals.first.strMealThumb;
+          }
+        }
+      }
+
+      // Load meals for first category
+      if (categories.isNotEmpty) {
+        await getMealsByCategory(categories.first.strCategory);
+      }
+
+      errorMessage = '';
+    } else {
+      errorMessage = response.errorMessage ?? 'Something went wrong';
     }
 
-    errorMessage = '';
-  } else {
-    errorMessage = response.errorMessage ?? 'Something went wrong';
+    isLoading = false;
+    notifyListeners();
   }
 
-  isLoading = false;
-  notifyListeners();
-}
+  Future<void> getMealsByCategory(String category) async {
+    selectedCategory = category;
 
-Future<void> getMealsByCategory(String category) async {
-  selectedCategory = category;
+    isLoading = true;
+    notifyListeners();
 
-  isLoading = true;
-  notifyListeners();
+    final response = await _apiService.get(Endpoints.mealsByCategory(category));
 
-  final response =
-      await _apiService.get(Endpoints.mealsByCategory(category));
+    if (response.isSuccess) {
+      final mealResponse = MealResponse.fromJson(response.data);
 
-  if (response.isSuccess) {
-    final mealResponse = MealResponse.fromJson(response.data);
+      meals = mealResponse.meals;
 
-    meals = mealResponse.meals;
+      errorMessage = '';
+    } else {
+      errorMessage = response.errorMessage ?? 'Something went wrong';
+    }
 
-    errorMessage = '';
-  } else {
-    errorMessage = response.errorMessage ?? 'Something went wrong';
+    isLoading = false;
+    notifyListeners();
   }
-
-  isLoading = false;
-  notifyListeners();
-}
 }
