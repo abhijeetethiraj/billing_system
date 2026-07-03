@@ -321,16 +321,64 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(height: 15),
 
-                    Container(
-                      height: 300,
-                      decoration: BoxDecoration(
-                        color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(20),
+                    if (vm.featuredMeal != null)
+                      Container(
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: const [
+                            BoxShadow(
+                              color: Colors.black12,
+                              blurRadius: 8,
+                              offset: Offset(0, 3),
+                            ),
+                          ],
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ClipRRect(
+                              borderRadius: const BorderRadius.vertical(
+                                top: Radius.circular(20),
+                              ),
+                              child: Image.network(
+                                vm.featuredMeal!.strMealThumb,
+                                height: 220,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+
+                            Padding(
+                              padding: const EdgeInsets.all(15),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    vm.featuredMeal!.strMeal,
+                                    style: const TextStyle(
+                                      fontSize: 22,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 8),
+
+                                  Text(
+                                    "₹ ${(120 + vm.featuredMeal!.idMeal.hashCode % 300)}",
+                                    style: const TextStyle(
+                                      color: Colors.deepOrange,
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: const Center(
-                        child: Text("Coming Next (Meals API)"),
-                      ),
-                    ),
                   ],
                 ),
               ),
