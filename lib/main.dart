@@ -1,54 +1,82 @@
-// import 'package:flutter/material.dart';
-// import 'data/api/api_service.dart';
-// import 'data/api/endpoints.dart';
-
-// void main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   final apiService = ApiService();
-
-//   final response = await apiService.get(Endpoints.categories);
-
-//   if (response.isSuccess) {
-//     final List list = response.data['meals'];
-//     final categories = list.where((item) => item['strCategory'] != 'Beef');
-
-//     for (var cat in categories) {
-//       debugPrint("Category: ${cat['strCategory']}");
-//     }
-//   } else {
-//     debugPrint("Error: ${response.errorMessage}");
-//   }
-// }
-// above is for food categories and meals, below is for products and categories from themealdb api
-
 import 'package:flutter/material.dart';
-import 'data/api/api_service.dart';
-import 'data/api/endpoints.dart';
+import 'package:provider/provider.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final apiService = ApiService();
+// Providers
+import 'provider/cart_provider.dart';
+import 'provider/food_provider.dart';
 
-  final catResponse = await apiService.get(Endpoints.categories);
+// Views
+import 'views/home/home_page.dart';
+import 'views/cart/cart_page.dart';
 
-  if (catResponse.isSuccess) {
-    final List list = catResponse.data['meals'];
-    final categories = list.where((item) => item['strCategory'] != 'Beef');
+// Widgets
+import '../../views/widgets/bottom_nav_bar.dart'; 
 
-    for (var cat in categories) {
-      String name = cat['strCategory'];
-      debugPrint("Category: $name");
+void main() {
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => FoodProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
+}
 
-      final mealResponse = await apiService.get(Endpoints.mealsByCategory(name));
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
-      if (mealResponse.isSuccess) {
-        final List meals = mealResponse.data['meals'];
-        for (var meal in meals) {
-          debugPrint(" - ${meal['strMeal']}");
-        }
-      }
-    }
-  } else {
-    debugPrint("Error: ${catResponse.errorMessage}");
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Food Delivery App',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primaryColor: const Color(0xFFFF6B3A),
+        scaffoldBackgroundColor: const Color(0xFFFAFAFA),
+      ),
+      home: const MainScreen(),
+    );
+  }
+}
+
+class MainScreen extends StatefulWidget {
+  const MainScreen({super.key});
+
+  @override
+  State<MainScreen> createState() => _MainScreenState();
+}
+
+class _MainScreenState extends State<MainScreen> {
+  int _selectedIndex = 0;
+
+  final List<Widget> _pages = [
+    const HomePage(),
+    const Center(child: Text("Search Page")),
+    const CartPage(),
+    const Center(child: Text("Orders Page")),
+    const Center(child: Text("Profile Page")),
+  ];
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: IndexedStack(
+        index: _selectedIndex,
+        children: _pages,
+      ),
+      // Use the imported widget here
+      bottomNavigationBar: BottomNavBar(
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+      ),
+    );
   }
 }
