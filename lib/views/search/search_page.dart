@@ -1,45 +1,21 @@
 import 'package:flutter/material.dart';
-
-import '../../widgets/search_bar.dart';
-import '../../widgets/recent_search_section.dart';
+import 'package:billing_system/viewmodels/search_viewmodel.dart';
+import 'package:provider/provider.dart';
 import '../../widgets/food_card.dart';
 
-class SearchPage extends StatelessWidget {
+class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
 
-  final List<String> recentSearches = const [
-    "Pizza",
-    "Burger",
-    "Pasta",
-    "Cold Coffee",
-  ];
+  @override
+  State<SearchPage> createState() => _SearchPageState();
+}
 
-  final List<Map<String, dynamic>> searchResults = const [
-    {
-      "name": "Cheese Pizza",
-      "restaurant": "Pizza Corner",
-      "price": 299,
-      "rating": 4.8,
-      "image": null,
-    },
-    {
-      "name": "Veg Burger",
-      "restaurant": "Burger House",
-      "price": 249,
-      "rating": 4.7,
-      "image": null,
-    },
-    {
-      "name": "White Sauce Pasta",
-      "restaurant": "Italian Kitchen",
-      "price": 279,
-      "rating": 4.6,
-      "image": null,
-    },
-  ];
+class _SearchPageState extends State<SearchPage> {
+  final TextEditingController _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
+    final vm = context.watch<SearchViewModel>();
     return Scaffold(
       backgroundColor: Colors.white,
 
@@ -50,26 +26,35 @@ class SearchPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // Search Bar
-              CustomSearchBar(),
-
-              const SizedBox(height: 30),
-
-              // Recent Searches
-              RecentSearchSection(
-                recentSearches: recentSearches,
-                onSearchTap: (value) {},
+              TextField(
+                controller: _controller,
+                onSubmitted: (value) {
+                  vm.searchMeal(value);
+                },
+                decoration: InputDecoration(
+                  hintText: "Search food...",
+                  prefixIcon: const Icon(Icons.search),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.search),
+                    onPressed: () {
+                      vm.searchMeal(_controller.text);
+                    },
+                  ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
               ),
 
               const SizedBox(height: 30),
 
+              // Recent Searches
+              const SizedBox(height: 30),
+
               const Text(
                 "Search Results",
-                style: TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
 
               const SizedBox(height: 20),
@@ -77,17 +62,15 @@ class SearchPage extends StatelessWidget {
               ListView.builder(
                 shrinkWrap: true,
                 physics: const NeverScrollableScrollPhysics(),
-                itemCount: searchResults.length,
+                itemCount: vm.searchMeals.length,
 
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 20),
-
                     child: SizedBox(
-                      height: 320,
-
+                      height: 340,
                       child: FoodCard(
-                        food: searchResults[index],
+                        meal: vm.searchMeals[index],
                         onTap: () {},
                         onAddToCart: () {},
                       ),
@@ -95,7 +78,6 @@ class SearchPage extends StatelessWidget {
                   );
                 },
               ),
-
             ],
           ),
         ),
