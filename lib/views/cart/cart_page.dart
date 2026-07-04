@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../payment/payments_page.dart';
 import '../widgets/cart_item.dart';
 import '../../provider/cart_provider.dart';
 
@@ -78,7 +79,7 @@ class CartPage extends StatelessWidget {
                       children: [
                         const Text("Total", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                         Text(
-                          "\$${viewModel.total.toStringAsFixed(2)}",
+                          "₹ ${viewModel.total.toStringAsFixed(2)}",
                           style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF983D2A)),
                         ),
                       ],
@@ -89,7 +90,19 @@ class CartPage extends StatelessWidget {
                       height: 56,
                       child: ElevatedButton(
                         // Disable the button if the cart is empty
-                        onPressed: viewModel.cartItems.isEmpty ? null : () {},
+                        onPressed: viewModel.cartItems.isEmpty
+                            ? null
+                            : () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) => PaymentsPage(
+                                      cartItems: viewModel.cartItems,
+                                      amount: viewModel.total,
+                                    ),
+                                  ),
+                                );
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFFF6B3A), 
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -112,7 +125,7 @@ class CartPage extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: TextStyle(fontSize: 16, color: Colors.grey.shade700)),
-        Text("\$${value.toStringAsFixed(2)}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+        Text("₹ ${value.toStringAsFixed(2)}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
       ],
     );
   }
