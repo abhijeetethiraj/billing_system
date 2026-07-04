@@ -1,137 +1,246 @@
-Yes. Since you're using **Flutter + Provider + MVVM + SQLite + API + Razorpay**, I would organize it like this:
+# Billing System
+
+A Flutter food-ordering app built with Provider, SQLite, API integration, and Razorpay checkout.
+
+This repository is currently organized around a simple flow:
+
+1. Load food categories and meals from TheMealDB API.
+2. Open meal detail pages from Home, Category, or Search.
+3. Add items to a persistent cart stored in SQLite.
+4. Pay using Razorpay test checkout.
+5. Save successful payments into order history.
+
+## Tech Stack
+
+- Flutter
+- Provider for state management
+- Dio for HTTP requests
+- sqflite for local persistence
+- sqflite_common_ffi for desktop/database startup support
+- razorpay_flutter for checkout
+
+## How The App Flows
 
 ```text
-lib/
-│
-├── data/
-│   ├── api/
-│   │   ├── api_service.dart
-│   │   └── endpoints.dart
-│   │
-│   ├── database/
-│   │   ├── database_helper.dart
-│   │   ├── cart_database.dart
-│   │   └── order_database.dart
-│   │
-│   └── repository/
-│       ├── food_repository.dart
-│       ├── cart_repository.dart
-│       └── order_repository.dart
-│
-├── models/
-│   ├── food_model.dart
-│   ├── cart_model.dart
-│   ├── order_model.dart
-│   └── order_item_model.dart
-│
-├── provider/
-│   ├── food_provider.dart
-│   ├── cart_provider.dart
-│   └── order_provider.dart
-│
-├── services/
-│   ├── razorpay_service.dart
-│   └── payment_service.dart
-│
-├── views/
-│   ├── home/
-│   │   └── home_page.dart
-│   │
-│   ├── search/
-│   │   └── search_page.dart
-│   │
-│   ├── details/
-│   │   └── food_detail_page.dart
-│   │
-│   ├── cart/
-│   │   └── cart_page.dart
-│   │
-│   ├── checkout/
-│   │   └── checkout_page.dart
-│   │
-│   ├── orders/
-│   │   ├── order_history_page.dart
-│   │   └── order_detail_page.dart
-│   │
-│   └── widgets/
-│       ├── food_card.dart
-│       ├── cart_item.dart
-│       └── search_bar.dart
-│
-├── utils/
-│   ├── constants.dart
-│   ├── colors.dart
-│   └── routes.dart
-│
-└── main.dart
-```
-
-## Responsibilities
-
-### `data/api`
-
-* Fetch food data from API.
-* Search food.
-* Parse JSON.
-
-### `data/database`
-
-* SQLite helper.
-* Cart CRUD.
-* Order CRUD.
-
-### `repository`
-
-* Connects API and SQLite with Providers.
-
-### `models`
-
-* Food
-* Cart
-* Order
-* Order Items
-
-### `provider`
-
-* Manage app state.
-* Notify UI of changes.
-
-### `services`
-
-* Razorpay integration.
-* Payment success/failure callbacks.
-
-### `views`
-
-* UI screens.
-
-### `utils`
-
-* App constants.
-* Colors.
-* Routes.
-
----
-
-### Flow
-
-```text
-API
-   │
+TheMealDB API
+   ↓
 ApiService
-   │
-Repository
-   │
-Provider
-   │
+   ↓
+HomeViewmodel / SearchViewModel
+   ↓
 Views
-   │
-SQLite (Cart & Orders)
+   ↓
+CartProvider / OrderProvider
+   ↓
+SQLite
 ```
 
----
+## Project Structure
+
+### `lib/main.dart`
+
+App entry point.
+
+- Registers `HomeViewmodel`, `SearchViewModel`, `CartProvider`, and `OrderProvider`.
+- Initializes SQLite FFI on desktop platforms.
+- Opens the shared app shell.
+
+### `lib/data/api/`
+
+- `api_service.dart` - Dio wrapper with basic error handling.
+- `endpoints.dart` - TheMealDB URLs for categories, meals by category, search, lookup, and random meal.
+- `api_response.dart` - Simple success/error response wrapper.
+
+### `lib/models/`
+
+- `category_model.dart` - Category JSON model.
+- `meal_model.dart` - Meal and meal response models.
+- `food_model.dart` - UI/cart-friendly food model.
+- `cart_model.dart` - Cart item model with SQLite serialization.
+- `order_model.dart` - Stored order summary model.
+- `order_item_model.dart` - Stored order item model.
+
+### `lib/viewmodels/`
+
+- `home_viewmodel.dart` - Loads categories, category meals, and featured meal data.
+- `search_viewmodel.dart` - Searches meals by name.
+
+### `lib/provider/`
+
+- `cart_provider.dart` - Manages cart state and keeps it synced to SQLite.
+- `order_provider.dart` - Loads and stores completed orders.
+- `food_provider.dart` - Experimental/provider-based seafood list loader.
+
+### `lib/services/`
+
+- `cart_database.dart` - SQLite helper for cart persistence.
+- `order_database.dart` - SQLite helper for saved orders.
+
+### `lib/views/`
+
+- `navigation/app_shell.dart` - Shared bottom navigation shell.
+- `home/home.dart` - Home screen with categories, featured meals, and popular meal cards.
+- `search/search_page.dart` - Search results page with add-to-cart support.
+- `category/category_meals_page.dart` - Full list of meals for one selected category.
+- `details/food_details_page.dart` - Meal detail page with add-to-cart action.
+- `cart/cart_page.dart` - Cart screen with summary and checkout button.
+- `payment/payments_page.dart` - Razorpay checkout popup launcher.
+- `orders/order_history_page.dart` - Saved order history list.
+
+### `lib/views/widgets/`
+
+- `bottom_nav_bar.dart` - Shared bottom navigation bar.
+- `cart_item.dart` - Cart row widget.
+- `food_cart.dart` - Food card widget used in some screens.
+- `search_bar.dart` - Search UI widget.
+
+### `lib/widgets/`
+
+- `food_card.dart` - Meal card widget used by the search screen.
+
+### `lib/utils/`
+
+- `constants.dart` - Currently empty.
+- `colors.dart` - Currently empty.
+- `routes.dart` - Currently empty.
+
+## Current Behavior
+
+- Home shows categories and meals from TheMealDB.
+- Tapping a category opens a category meals page.
+- Tapping a meal opens the detail page.
+- Add to Cart saves to SQLite.
+- Checkout opens Razorpay test payment.
+- Successful payment saves an order into order history and clears the cart.
+
+## Files That Are Still Placeholders
+
+These files exist but are currently empty or not used yet:
+
+- `lib/views/js.dart`
+- `lib/views/orders/order_detail_page.dart`
+- `lib/utils/constants.dart`
+- `lib/utils/colors.dart`
+- `lib/utils/routes.dart`
+
+## How To Rebuild This App Cleanly
+
+If you want to rewrite this project as human-written code, start in this order:
+
+1. Build the API layer first.
+   - Create `ApiService`.
+   - Add endpoint constants.
+   - Confirm category and meal JSON parsing.
+
+2. Build the models.
+   - `Meal`
+   - `Category`
+   - `FoodModel`
+   - `CartModel`
+   - `OrderModel`
+   - `OrderItemModel`
+
+3. Build the state layer.
+   - `HomeViewmodel` for categories and featured meals.
+   - `SearchViewModel` for search results.
+   - `CartProvider` for cart state.
+   - `OrderProvider` for order history.
+
+4. Build persistence.
+   - SQLite helper for cart.
+   - SQLite helper for orders.
+   - Load data on app start.
+
+5. Build the UI.
+   - Shared shell with bottom navigation.
+   - Home screen.
+   - Category meals page.
+   - Search page.
+   - Detail page.
+   - Cart page.
+   - Payment page.
+   - Order history page.
+
+6. Connect checkout.
+   - Open Razorpay popup from the cart checkout button.
+   - On success, save the order and clear the cart.
+
+## Roadmap
+
+### Phase 1: Foundation
+
+- Create the Flutter project structure.
+- Add packages: `provider`, `dio`, `sqflite`, `sqflite_common_ffi`, `path`, and `razorpay_flutter`.
+- Create the base folder structure for `data`, `models`, `provider`, `services`, and `views`.
+
+### Phase 2: Data Layer
+
+- Build `ApiService` and `Endpoints`.
+- Confirm TheMealDB category, search, and random-meal calls.
+- Create the model classes for meals, categories, cart items, and orders.
+
+### Phase 3: State Layer
+
+- Implement `HomeViewmodel` for category and featured data.
+- Implement `SearchViewModel` for meal search.
+- Implement `CartProvider` for cart state and SQLite sync.
+- Implement `OrderProvider` for saved orders.
+
+### Phase 4: Local Storage
+
+- Finish the cart SQLite helper.
+- Finish the order SQLite helper.
+- Load both cart and order data on app start.
+
+### Phase 5: UI Screens
+
+- Build the shared app shell with bottom navigation.
+- Build Home, Search, Category Meals, Food Details, Cart, Payment, and Order History screens.
+- Connect meal taps to detail pages.
+- Connect checkout to Razorpay.
+
+### Phase 6: Payment and History
+
+- Open Razorpay popup from Checkout.
+- On payment success, save the order to SQLite.
+- Clear the cart after a successful payment.
+- Show the order in Order History.
+
+### Phase 7: Polish
+
+- Clean unused files and placeholder code.
+- Remove duplicate widgets or repeated UI logic.
+- Add proper error handling and loading states.
+- Apply final UI styling and naming cleanup.
+
+### Final End State
+
+The app should end with this flow:
+
+```text
+Home / Category / Search
+    → Food Details
+    → Add to Cart
+    → Cart
+    → Razorpay Payment
+    → Save Order
+    → Order History
+```
+
+## Setup And Run
+
+```bash
+flutter pub get
+flutter run
+```
+
+If you are testing on desktop, SQLite FFI is initialized in `main.dart`.
 
 
-Group Member :
-1) Abhijeeet 
-2) Prasanna
+
+## Team
+
+- Abhijeet
+- Prasanna
+- Manasvi
+- Shreya
