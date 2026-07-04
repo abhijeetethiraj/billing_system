@@ -1,10 +1,14 @@
 import 'package:billing_system/viewmodels/home_viewmodel.dart';
+import 'package:billing_system/views/details/food_details_page.dart';
+import 'package:billing_system/views/category/category_meals_page.dart';
 import 'package:billing_system/views/search/search_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final VoidCallback? onSearchTap;
+
+  const HomeScreen({super.key, this.onSearchTap});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,183 +28,174 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final vm = context.watch<HomeViewmodel>();
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Builder(
-          builder: (_) {
-            if (vm.isLoading) {
-              return const Center(child: CircularProgressIndicator());
-            }
+    return SafeArea(
+      child: Builder(
+        builder: (_) {
+          if (vm.isLoading) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            if (vm.errorMessage.isNotEmpty) {
-              return Center(child: Text(vm.errorMessage));
-            }
+          if (vm.errorMessage.isNotEmpty) {
+            return Center(child: Text(vm.errorMessage));
+          }
 
-            return SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// HEADER
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(Icons.menu),
+          return SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {},
+                        icon: const Icon(Icons.menu),
+                      ),
+                      const Text(
+                        'GourmetGo',
+                        style: TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.deepOrange,
                         ),
-
-                        const Text(
-                          "GourmetGo",
-                          style: TextStyle(
-                            fontSize: 28,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.deepOrange,
+                      ),
+                      Stack(
+                        children: [
+                          IconButton(
+                            onPressed: () {},
+                            icon: const Icon(Icons.shopping_bag_outlined),
                           ),
-                        ),
-
-                        Stack(
-                          children: [
-                            IconButton(
-                              onPressed: () {},
-                              icon: const Icon(Icons.shopping_bag_outlined),
+                          Positioned(
+                            right: 10,
+                            top: 10,
+                            child: Container(
+                              width: 8,
+                              height: 8,
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
                             ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 25),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Good Morning,',
+                            style: TextStyle(
+                              color: Colors.grey,
+                              fontSize: 16,
+                            ),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            'Hello, Alex!',
+                            style: TextStyle(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const CircleAvatar(
+                        radius: 28,
+                        backgroundImage: NetworkImage(
+                          'https://i.pravatar.cc/150?img=3',
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 25),
+                  GestureDetector(
+                    onTap: () {
+                      if (widget.onSearchTap != null) {
+                        widget.onSearchTap!();
+                        return;
+                      }
 
-                            Positioned(
-                              right: 10,
-                              top: 10,
-                              child: Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  color: Colors.red,
-                                  shape: BoxShape.circle,
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const SearchPage()),
+                      );
+                    },
+                    child: AbsorbPointer(
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        height: 55,
+                        decoration: BoxDecoration(
+                          color: Colors.grey.shade100,
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.search),
+                            const SizedBox(width: 10),
+                            const Expanded(
+                              child: TextField(
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: 'What are you craving?',
                                 ),
                               ),
                             ),
-                          ],
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    /// GREETING
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Good Morning,",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                              ),
-                            ),
-
-                            SizedBox(height: 5),
-
-                            Text(
-                              "Hello, Alex!",
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            CircleAvatar(
+                              radius: 18,
+                              backgroundColor: Colors.white,
+                              child: Icon(Icons.tune, size: 18),
                             ),
                           ],
-                        ),
-
-                        const CircleAvatar(
-                          radius: 28,
-                          backgroundImage: NetworkImage(
-                            "https://i.pravatar.cc/150?img=3",
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    /// SEARCH BAR
-                    /// SEARCH BAR
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (_) => const SearchPage()),
-                        );
-                      },
-                      child: AbsorbPointer(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 16),
-                          height: 55,
-                          decoration: BoxDecoration(
-                            color: Colors.grey.shade100,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.search),
-
-                              const SizedBox(width: 10),
-
-                              const Expanded(
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    hintText: "What are you craving?",
-                                  ),
-                                ),
-                              ),
-
-                              CircleAvatar(
-                                radius: 18,
-                                backgroundColor: Colors.white,
-                                child: Icon(Icons.tune, size: 18),
-                              ),
-                            ],
-                          ),
                         ),
                       ),
                     ),
-
-                    const SizedBox(height: 30),
-
-                    /// CATEGORY TITLE
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Categories",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
+                  ),
+                  const SizedBox(height: 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Categories',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                      TextButton(
+                        onPressed: () {},
+                        child: const Text('See All'),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  SizedBox(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: vm.categories.length,
+                      itemBuilder: (context, index) {
+                        final category = vm.categories[index];
 
-                        TextButton(
-                          onPressed: () {},
-                          child: const Text("See All"),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(height: 20),
-
-                    /// CATEGORY LIST
-                    SizedBox(
-                      height: 100,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: vm.categories.length,
-                        itemBuilder: (context, index) {
-                          final category = vm.categories[index];
-
-                          return Container(
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => CategoryMealsPage(
+                                  categoryName: category.strCategory,
+                                  categoryImage: category.thumbnail,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
                             width: 80,
                             margin: const EdgeInsets.only(right: 15),
                             child: Column(
@@ -215,42 +210,49 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ? const Icon(Icons.fastfood)
                                       : null,
                                 ),
-
                                 const SizedBox(height: 8),
-
                                 Text(
                                   category.strCategory,
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-
-                    const SizedBox(height: 25),
-
-                    /// FEATURED TODAY
-                    const Text(
-                      "Featured Today",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  const SizedBox(height: 25),
+                  const Text(
+                    'Featured Today',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  const SizedBox(height: 15),
+                  SizedBox(
+                    height: 280,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: vm.meals.length,
+                      itemBuilder: (context, index) {
+                        final meal = vm.meals[index];
+                        final price = (index + 1) * 120;
 
-                    const SizedBox(height: 15),
-
-                    SizedBox(
-                      height: 280,
-                      child: ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: vm.meals.length,
-                        itemBuilder: (context, index) {
-                          final meal = vm.meals[index];
-
-                          return Container(
+                        return GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => FoodDetailsPage(
+                                  meal: meal,
+                                  price: price.toDouble(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Container(
                             width: 240,
                             margin: const EdgeInsets.only(right: 16),
                             decoration: BoxDecoration(
@@ -267,7 +269,6 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                /// Meal Image
                                 ClipRRect(
                                   borderRadius: const BorderRadius.vertical(
                                     top: Radius.circular(20),
@@ -279,7 +280,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                     fit: BoxFit.cover,
                                   ),
                                 ),
-
                                 Padding(
                                   padding: const EdgeInsets.all(12),
                                   child: Column(
@@ -295,11 +295,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-
                                       const SizedBox(height: 8),
-
                                       Text(
-                                        "₹ ${(index + 1) * 120}",
+                                        '₹ $price',
                                         style: const TextStyle(
                                           color: Colors.deepOrange,
                                           fontSize: 18,
@@ -311,26 +309,38 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                               ],
                             ),
-                          );
-                        },
-                      ),
+                          ),
+                        );
+                      },
                     ),
-
-                    const SizedBox(height: 30),
-
-                    /// POPULAR
-                    const Text(
-                      "Popular Near You",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  ),
+                  const SizedBox(height: 30),
+                  const Text(
+                    'Popular Near You',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
                     ),
+                  ),
+                  const SizedBox(height: 15),
+                  if (vm.featuredMeal != null)
+                    GestureDetector(
+                      onTap: () {
+                        final meal = vm.featuredMeal!;
+                        final price =
+                            (120 + meal.idMeal.hashCode % 300).toDouble();
 
-                    const SizedBox(height: 15),
-
-                    if (vm.featuredMeal != null)
-                      Container(
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => FoodDetailsPage(
+                              meal: meal,
+                              price: price,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
                           color: Colors.white,
@@ -357,7 +367,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                 fit: BoxFit.cover,
                               ),
                             ),
-
                             Padding(
                               padding: const EdgeInsets.all(15),
                               child: Column(
@@ -370,11 +379,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                       fontWeight: FontWeight.bold,
                                     ),
                                   ),
-
                                   const SizedBox(height: 8),
-
                                   Text(
-                                    "₹ ${(120 + vm.featuredMeal!.idMeal.hashCode % 300)}",
+                                    '₹ ${(120 + vm.featuredMeal!.idMeal.hashCode % 300)}',
                                     style: const TextStyle(
                                       color: Colors.deepOrange,
                                       fontSize: 20,
@@ -387,12 +394,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                  ],
-                ),
+                    ),
+                ],
               ),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

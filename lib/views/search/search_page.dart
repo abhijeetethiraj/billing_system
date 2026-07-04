@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:billing_system/viewmodels/search_viewmodel.dart';
+import 'package:billing_system/models/food_model.dart';
+import 'package:billing_system/provider/cart_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:billing_system/views/details/food_details_page.dart';
 import '../../widgets/food_card.dart';
 
 class SearchPage extends StatefulWidget {
@@ -71,8 +74,50 @@ class _SearchPageState extends State<SearchPage> {
                       height: 340,
                       child: FoodCard(
                         meal: vm.searchMeals[index],
-                        onTap: () {},
-                        onAddToCart: () {},
+                        onTap: () {
+                          final meal = vm.searchMeals[index];
+                          final price = (120 + meal.idMeal.hashCode % 250).toDouble();
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => FoodDetailsPage(
+                                meal: meal,
+                                price: price,
+                              ),
+                            ),
+                          );
+                        },
+                        onAddToCart: () async {
+                          final meal = vm.searchMeals[index];
+                          final price = (120 + meal.idMeal.hashCode % 250).toDouble();
+
+                          try {
+                            await context.read<CartProvider>().addToCart(
+                                FoodModel(
+                                  id: meal.idMeal,
+                                  name: meal.strMeal,
+                                  restaurant: 'Restaurant',
+                                  price: price,
+                                  image: meal.strMealThumb,
+                                ),
+                              );
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('${meal.strMeal} added to cart'),
+                                duration: const Duration(seconds: 1),
+                              ),
+                            );
+                          } catch (error) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to add to cart: $error'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        },
                       ),
                     ),
                   );
