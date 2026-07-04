@@ -35,7 +35,7 @@ class FoodCartWidget extends StatelessWidget {
           children: [
             Text(food.restaurant, style: TextStyle(fontSize: 12, color: Colors.grey.shade600)),
             const SizedBox(height: 4),
-            Text("\$${food.price.toStringAsFixed(2)}", style: const TextStyle(color: Color(0xFF983D2A), fontWeight: FontWeight.bold)),
+            Text("₹ ${food.price.toStringAsFixed(2)}", style: const TextStyle(color: Color(0xFF983D2A), fontWeight: FontWeight.bold)),
           ],
         ),
         trailing: IconButton(
