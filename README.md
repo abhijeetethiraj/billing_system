@@ -169,49 +169,56 @@ If you want to rewrite this project as human-written code, start in this order:
 
 ### Phase 1: Foundation
 
-- Create the Flutter project structure.
-- Add packages: `provider`, `dio`, `sqflite`, `sqflite_common_ffi`, `path`, and `razorpay_flutter`.
-- Create the base folder structure for `data`, `models`, `provider`, `services`, and `views`.
+- Create the Flutter project structure in `lib/main.dart` and the folder layout under `lib/`.
+- Add packages in `pubspec.yaml`: `provider`, `dio`, `sqflite`, `sqflite_common_ffi`, `path`, and `razorpay_flutter`.
+- Create the base folder structure under `lib/data/`, `lib/models/`, `lib/provider/`, `lib/services/`, `lib/views/`, and `lib/utils/`.
 
 ### Phase 2: Data Layer
 
-- Build `ApiService` and `Endpoints`.
-- Confirm TheMealDB category, search, and random-meal calls.
-- Create the model classes for meals, categories, cart items, and orders.
+- Build `lib/data/api/api_service.dart`, `lib/data/api/endpoints.dart`, and `lib/data/api/api_response.dart`.
+- Confirm TheMealDB category, search, random-meal, and lookup calls inside `lib/data/api/endpoints.dart`.
+- Create the model classes in `lib/models/meal_model.dart`, `lib/models/category_model.dart`, `lib/models/food_model.dart`, `lib/models/cart_model.dart`, `lib/models/order_model.dart`, and `lib/models/order_item_model.dart`.
 
 ### Phase 3: State Layer
 
-- Implement `HomeViewmodel` for category and featured data.
-- Implement `SearchViewModel` for meal search.
-- Implement `CartProvider` for cart state and SQLite sync.
-- Implement `OrderProvider` for saved orders.
+- Implement `lib/viewmodels/home_viewmodel.dart` for category and featured data.
+- Implement `lib/viewmodels/search_viewmodel.dart` for meal search.
+- Implement `lib/provider/cart_provider.dart` for cart state and SQLite sync.
+- Implement `lib/provider/order_provider.dart` for saved orders.
+- Keep `lib/provider/food_provider.dart` only if you still want the experimental seafood loader.
 
 ### Phase 4: Local Storage
 
-- Finish the cart SQLite helper.
-- Finish the order SQLite helper.
-- Load both cart and order data on app start.
+- Finish `lib/services/cart_database.dart` for cart SQLite.
+- Finish `lib/services/order_database.dart` for order SQLite.
+- Load both cart and order data on app start from `lib/views/navigation/app_shell.dart`.
 
 ### Phase 5: UI Screens
 
-- Build the shared app shell with bottom navigation.
-- Build Home, Search, Category Meals, Food Details, Cart, Payment, and Order History screens.
-- Connect meal taps to detail pages.
-- Connect checkout to Razorpay.
+- Build the shared app shell in `lib/views/navigation/app_shell.dart` and `lib/views/widgets/bottom_nav_bar.dart`.
+- Build Home in `lib/views/home/home.dart`.
+- Build Search in `lib/views/search/search_page.dart` and `lib/widgets/food_card.dart`.
+- Build Category Meals in `lib/views/category/category_meals_page.dart`.
+- Build Food Details in `lib/views/details/food_details_page.dart`.
+- Build Cart in `lib/views/cart/cart_page.dart` and `lib/views/widgets/cart_item.dart`.
+- Build Payment in `lib/views/payment/payments_page.dart`.
+- Build Order History in `lib/views/orders/order_history_page.dart`.
+- Connect meal taps from Home, Search, and Category to the detail page files above.
+- Connect checkout from `lib/views/cart/cart_page.dart` to `lib/views/payment/payments_page.dart`.
 
 ### Phase 6: Payment and History
 
-- Open Razorpay popup from Checkout.
-- On payment success, save the order to SQLite.
-- Clear the cart after a successful payment.
-- Show the order in Order History.
+- Open Razorpay popup from `lib/views/payment/payments_page.dart`.
+- On payment success, save the order using `lib/provider/order_provider.dart` and `lib/services/order_database.dart`.
+- Clear the cart using `lib/provider/cart_provider.dart` and `lib/services/cart_database.dart`.
+- Show the order in `lib/views/orders/order_history_page.dart`.
 
 ### Phase 7: Polish
 
-- Clean unused files and placeholder code.
-- Remove duplicate widgets or repeated UI logic.
-- Add proper error handling and loading states.
-- Apply final UI styling and naming cleanup.
+- Clean unused files and placeholder code such as `lib/views/js.dart`, `lib/utils/constants.dart`, `lib/utils/colors.dart`, and `lib/utils/routes.dart`.
+- Remove duplicate widgets or repeated UI logic across `lib/widgets/` and `lib/views/widgets/`.
+- Add proper error handling and loading states in `lib/viewmodels/`, `lib/provider/`, and `lib/views/`.
+- Apply final UI styling and naming cleanup across all view files.
 
 ### Final End State
 
