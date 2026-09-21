@@ -6,10 +6,6 @@ A Flutter food-ordering and billing application built around a simple restaurant
 
 The current `prasanna-dev` branch combines TheMealDB for food discovery, Provider for application state, SQLite for local cart/order persistence, Firebase Authentication for accounts, SharedPreferences for theme settings, and Razorpay test checkout.
 
-> **Branch reviewed:** `prasanna-dev`
->
-> **Review basis:** source files and configuration that are currently accessible from the branch, reviewed on 2026-09-21. This README describes the code as it exists now; it is not a claim that every repository file was exhaustively executed locally.
-
 ---
 
 ## Features
