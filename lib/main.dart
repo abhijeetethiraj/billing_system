@@ -1,3 +1,4 @@
+import 'package:billing_system/firebase_options.dart';
 import 'package:billing_system/viewmodels/home_viewmodel.dart';
 import 'package:billing_system/viewmodels/search_viewmodel.dart';
 import 'package:billing_system/provider/cart_provider.dart';
@@ -40,6 +41,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = context.watch<ThemeProvider>().themeMode;
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: const AppShell(),

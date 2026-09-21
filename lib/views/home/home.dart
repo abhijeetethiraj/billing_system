@@ -1,3 +1,4 @@
+import 'package:billing_system/models/meal_model.dart';
 import 'package:billing_system/viewmodels/home_viewmodel.dart';
 import 'package:billing_system/views/details/food_details_page.dart';
 import 'package:billing_system/views/category/category_meals_page.dart';
@@ -22,6 +23,15 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.microtask(() {
       context.read<HomeViewmodel>().getCategories();
     });
+  }
+
+  void _openDetails(Meal meal, double price) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => FoodDetailsPage(meal: meal, price: price),
+      ),
+    );
   }
 
   @override
@@ -202,7 +212,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               children: [
                                 CircleAvatar(
                                   radius: 30,
-                                  backgroundColor: Colors.orange.shade100,
+                                  backgroundColor: cs.surfaceContainerHighest,
                                   backgroundImage: category.thumbnail != null
                                       ? NetworkImage(category.thumbnail!)
                                       : null,

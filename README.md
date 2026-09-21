@@ -34,6 +34,7 @@ CartProvider / OrderProvider
    ↓
 SQLite
 ```
+---
 
 ## Project Structure
 

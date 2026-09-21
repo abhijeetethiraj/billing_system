@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 class CategoryResponse {
   final List<Category> meals;
 

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "126167070586",
+    "project_id": "go-gourmet-alpha",
+    "storage_bucket": "go-gourmet-alpha.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:126167070586:android:6f09dcfcaa094bc20b48c3",
+        "android_client_info": {
+          "package_name": "com.example.billing_system"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5qz-PZdGygFMFj3qoFLRVUceIk7SIWh8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

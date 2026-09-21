@@ -6,30 +6,44 @@ class BottomNavBar extends StatelessWidget {
 
   const BottomNavBar({super.key, required this.currentIndex, required this.onTap});
 
+  // Every icon gets the same padding so all five labels line up.
+  Widget _icon(IconData icon, {Color? color, Color? background}) {
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: background ?? Colors.transparent,
+        shape: BoxShape.circle,
+      ),
+      child: Icon(icon, color: color),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
+    final cartSelected = currentIndex == 2;
+
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
-      selectedItemColor: Colors.black87,
-      unselectedItemColor: Colors.grey.shade500,
+      // Selected/unselected colors come from the app theme.
       showUnselectedLabels: true,
       selectedFontSize: 12,
       unselectedFontSize: 12,
       currentIndex: currentIndex,
       onTap: onTap,
       items: [
-        const BottomNavigationBarItem(icon: Icon(Icons.home_outlined), label: "Home"),
-        const BottomNavigationBarItem(icon: Icon(Icons.search), label: "Search"),
+        BottomNavigationBarItem(icon: _icon(Icons.home_outlined), label: "Home"),
+        BottomNavigationBarItem(icon: _icon(Icons.search), label: "Search"),
         BottomNavigationBarItem(
-          icon: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(color: currentIndex == 2 ? const Color(0xFFFF6B3A) : Colors.transparent, shape: BoxShape.circle),
-            child: Icon(Icons.shopping_cart_outlined, color: currentIndex == 2 ? Colors.white : Colors.grey.shade500),
+          icon: _icon(
+            Icons.shopping_cart_outlined,
+            color: cartSelected ? Colors.white : cs.onSurfaceVariant,
+            background: cartSelected ? const Color(0xFFFF6B3A) : null,
           ),
           label: "Cart",
         ),
-        const BottomNavigationBarItem(icon: Icon(Icons.receipt_long_outlined), label: "Orders"),
-        const BottomNavigationBarItem(icon: Icon(Icons.person_outline), label: "Profile"),
+        BottomNavigationBarItem(icon: _icon(Icons.receipt_long_outlined), label: "Orders"),
+        BottomNavigationBarItem(icon: _icon(Icons.person_outline), label: "Profile"),
       ],
     );
   }
