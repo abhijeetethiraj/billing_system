@@ -3,8 +3,14 @@ import 'package:flutter/material.dart';
 class BottomNavBar extends StatelessWidget {
   final int currentIndex;
   final Function(int) onTap;
+  final int cartCount;
 
-  const BottomNavBar({super.key, required this.currentIndex, required this.onTap});
+  const BottomNavBar({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+    this.cartCount = 0,
+  });
 
   // Every icon gets the same padding so all five labels line up.
   Widget _icon(IconData icon, {Color? color, Color? background}) {
@@ -23,6 +29,12 @@ class BottomNavBar extends StatelessWidget {
     final cs = Theme.of(context).colorScheme;
     final cartSelected = currentIndex == 2;
 
+    final cartIconWidget = _icon(
+      Icons.shopping_cart_outlined,
+      color: cartSelected ? Colors.white : cs.onSurfaceVariant,
+      background: cartSelected ? const Color(0xFFFF6B3A) : null,
+    );
+
     return BottomNavigationBar(
       type: BottomNavigationBarType.fixed,
       // Selected/unselected colors come from the app theme.
@@ -35,11 +47,14 @@ class BottomNavBar extends StatelessWidget {
         BottomNavigationBarItem(icon: _icon(Icons.home_outlined), label: "Home"),
         BottomNavigationBarItem(icon: _icon(Icons.search), label: "Search"),
         BottomNavigationBarItem(
-          icon: _icon(
-            Icons.shopping_cart_outlined,
-            color: cartSelected ? Colors.white : cs.onSurfaceVariant,
-            background: cartSelected ? const Color(0xFFFF6B3A) : null,
-          ),
+          icon: cartCount > 0
+              ? Badge.count(
+                  count: cartCount,
+                  backgroundColor: const Color(0xFFFF6B3A),
+                  textColor: Colors.white,
+                  child: cartIconWidget,
+                )
+              : cartIconWidget,
           label: "Cart",
         ),
         BottomNavigationBarItem(icon: _icon(Icons.receipt_long_outlined), label: "Orders"),

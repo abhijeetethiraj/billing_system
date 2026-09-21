@@ -5,8 +5,17 @@ class FoodCard extends StatelessWidget {
   final Meal meal;
   final VoidCallback? onTap;
   final VoidCallback? onAddToCart;
+  final double? width;
+  final EdgeInsetsGeometry? margin;
 
-  const FoodCard({super.key, required this.meal, this.onTap, this.onAddToCart});
+  const FoodCard({
+    super.key,
+    required this.meal,
+    this.onTap,
+    this.onAddToCart,
+    this.width = 220,
+    this.margin = const EdgeInsets.only(right: 16),
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,8 +24,8 @@ class FoodCard extends StatelessWidget {
       onTap: onTap,
 
       child: Container(
-        width: 220,
-        margin: const EdgeInsets.only(right: 16),
+        width: width,
+        margin: margin,
 
         decoration: BoxDecoration(
           color: cs.surfaceContainerHighest,
@@ -81,7 +90,7 @@ class FoodCard extends StatelessWidget {
 
             //================ DETAILS =================
             Padding(
-              padding: const EdgeInsets.all(14),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -98,14 +107,14 @@ class FoodCard extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 4),
 
                   Text(
                     "Restaurant",
-                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                    style: const TextStyle(color: Colors.grey, fontSize: 13),
                   ),
 
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 8),
 
                   Row(
                     children: [
@@ -130,7 +139,7 @@ class FoodCard extends StatelessWidget {
                     ],
                   ),
 
-                  const SizedBox(height: 14),
+                  const SizedBox(height: 10),
 
                   SizedBox(
                     width: double.infinity,

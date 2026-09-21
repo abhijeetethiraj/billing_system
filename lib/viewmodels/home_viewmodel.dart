@@ -14,8 +14,27 @@ class HomeViewmodel extends ChangeNotifier {
   String errorMessage = '';
   List<Meal> meals = [];
   Meal? featuredMeal;
+  List<Meal> vegMeals = [];
+  List<Meal> nonVegMeals = [];
 
   String selectedCategory = "";
+
+  Future<void> loadDietMeals() async {
+    if (vegMeals.isNotEmpty && nonVegMeals.isNotEmpty) return;
+
+    try {
+      final vegResponse = await _apiService.get(Endpoints.mealsByCategory('Vegetarian'));
+      if (vegResponse.isSuccess) {
+        vegMeals = MealResponse.fromJson(vegResponse.data).meals;
+      }
+
+      final nonVegResponse = await _apiService.get(Endpoints.mealsByCategory('Chicken'));
+      if (nonVegResponse.isSuccess) {
+        nonVegMeals = MealResponse.fromJson(nonVegResponse.data).meals;
+      }
+      notifyListeners();
+    } catch (_) {}
+  }
 
   Future<void> getRandomMeal() async {
     final response = await _apiService.get(Endpoints.randomMeal);
@@ -58,6 +77,8 @@ class HomeViewmodel extends ChangeNotifier {
       if (categories.isNotEmpty) {
         await getMealsByCategory(categories.first.strCategory);
       }
+
+      await loadDietMeals();
 
       errorMessage = '';
     } else {
