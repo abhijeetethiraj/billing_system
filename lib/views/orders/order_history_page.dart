@@ -20,7 +20,11 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 	@override
 	Widget build(BuildContext context) {
 		return Scaffold(
-			appBar: AppBar( 
+			backgroundColor: Colors.white,
+			appBar: AppBar(
+				backgroundColor: Colors.white,
+				elevation: 0,
+				foregroundColor: Colors.black87,
 				title: const Text('Order History'),
 			),
 			body: Consumer<OrderProvider>(
@@ -43,7 +47,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 								margin: const EdgeInsets.only(bottom: 16),
 								padding: const EdgeInsets.all(16),
 								decoration: BoxDecoration(
-									color: Theme.of(context).colorScheme.surfaceContainer,
+									color: Colors.white,
 									borderRadius: BorderRadius.circular(18),
 									boxShadow: const [
 										BoxShadow(
@@ -68,12 +72,12 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 										const SizedBox(height: 6),
 										Text(
 											'Items: ${order.items.length}',
-											style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 14),
+											style: TextStyle(color: Colors.grey.shade700),
 										),
 										const SizedBox(height: 8),
 										Text(
 											order.createdAt.toString(),
-											style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant, fontSize: 12),
+											style: TextStyle(color: Colors.grey.shade600, fontSize: 12),
 										),
 									],
 								),

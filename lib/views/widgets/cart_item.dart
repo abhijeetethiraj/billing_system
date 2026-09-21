@@ -71,7 +71,11 @@ class CartItemWidget extends StatelessWidget {
                   children: [
                     Text(
                       "₹ ${item.price.toStringAsFixed(2)}",
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: context.deepAccent),
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Color(0xFF983D2A),
+                      ),
                     ),
                     // Quantity Control Button Cluster
                     Container(

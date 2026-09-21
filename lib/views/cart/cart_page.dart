@@ -71,7 +71,7 @@ class CartPage extends StatelessWidget {
                         const Text("Total", style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                         Text(
                           "₹ ${viewModel.total.toStringAsFixed(2)}",
-                          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF983D2A)),
+                          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Color(0xFF983D2A)),
                         ),
                       ],
                     ),
@@ -87,7 +87,10 @@ class CartPage extends StatelessWidget {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (_) => PaymentsPage(cartItems: viewModel.cartItems, amount: viewModel.total),
+                                    builder: (_) => PaymentsPage(
+                                      cartItems: viewModel.cartItems,
+                                      amount: viewModel.total,
+                                    ),
                                   ),
                                 );
                               },
@@ -115,7 +118,7 @@ class CartPage extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Text(label, style: TextStyle(fontSize: 16, color: context.cs.onSurfaceVariant)),
+        Text(label, style: TextStyle(fontSize: 16, color: Colors.grey.shade700)),
         Text("₹ ${value.toStringAsFixed(2)}", style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
       ],
     );

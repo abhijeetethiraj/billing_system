@@ -10,10 +10,16 @@ class CategoryMealsPage extends StatelessWidget {
   final String categoryName;
   final String? categoryImage;
 
-  const CategoryMealsPage({super.key, required this.categoryName, this.categoryImage});
+  const CategoryMealsPage({
+    super.key,
+    required this.categoryName,
+    this.categoryImage,
+  });
 
   Future<List<Meal>> _loadMeals() async {
-    final response = await ApiService().get(Endpoints.mealsByCategory(categoryName));
+    final response = await ApiService().get(
+      Endpoints.mealsByCategory(categoryName),
+    );
 
     if (response.isSuccess) {
       return MealResponse.fromJson(response.data).meals;
@@ -25,7 +31,13 @@ class CategoryMealsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(categoryName)),
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black87,
+        elevation: 0,
+        title: Text(categoryName),
+      ),
       body: FutureBuilder<List<Meal>>(
         future: _loadMeals(),
         builder: (context, snapshot) {
@@ -48,12 +60,25 @@ class CategoryMealsPage extends StatelessWidget {
             children: [
               if (categoryImage != null)
                 ClipRRect(
-                  borderRadius: const BorderRadius.vertical(bottom: Radius.circular(24)),
-                  child: Image.network(categoryImage!, height: 180, width: double.infinity, fit: BoxFit.cover),
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(24),
+                  ),
+                  child: Image.network(
+                    categoryImage!,
+                    height: 180,
+                    width: double.infinity,
+                    fit: BoxFit.cover,
+                  ),
                 ),
               Padding(
                 padding: const EdgeInsets.all(20),
-                child: Text('$categoryName foods', style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                child: Text(
+                  '$categoryName foods',
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
               Expanded(
                 child: ListView.builder(
@@ -70,21 +95,37 @@ class CategoryMealsPage extends StatelessWidget {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
-                              builder: (_) => FoodDetailsPage(meal: meal, price: price),
+                              builder: (_) => FoodDetailsPage(
+                                meal: meal,
+                                price: price,
+                              ),
                             ),
                           );
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Theme.of(context).colorScheme.surfaceContainer,
+                            color: Colors.white,
                             borderRadius: BorderRadius.circular(20),
-                            boxShadow: const [BoxShadow(color: Colors.black12, blurRadius: 8, offset: Offset(0, 3))],
+                            boxShadow: const [
+                              BoxShadow(
+                                color: Colors.black12,
+                                blurRadius: 8,
+                                offset: Offset(0, 3),
+                              ),
+                            ],
                           ),
                           child: Row(
                             children: [
                               ClipRRect(
-                                borderRadius: const BorderRadius.horizontal(left: Radius.circular(20)),
-                                child: Image.network(meal.strMealThumb, width: 120, height: 120, fit: BoxFit.cover),
+                                borderRadius: const BorderRadius.horizontal(
+                                  left: Radius.circular(20),
+                                ),
+                                child: Image.network(
+                                  meal.strMealThumb,
+                                  width: 120,
+                                  height: 120,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               Expanded(
                                 child: Padding(
@@ -96,12 +137,19 @@ class CategoryMealsPage extends StatelessWidget {
                                         meal.strMeal,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
-                                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
                                         '₹ ${price.toStringAsFixed(0)}',
-                                        style: const TextStyle(color: Colors.deepOrange, fontSize: 18, fontWeight: FontWeight.bold),
+                                        style: const TextStyle(
+                                          color: Colors.deepOrange,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                       ),
                                     ],
                                   ),
@@ -122,7 +170,12 @@ class CategoryMealsPage extends StatelessWidget {
       bottomNavigationBar: BottomNavBar(
         currentIndex: 0,
         onTap: (index) {
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => AppShell(initialIndex: index)));
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (_) => AppShell(initialIndex: index),
+            ),
+          );
         },
       ),
     );

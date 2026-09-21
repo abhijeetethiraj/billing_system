@@ -7,7 +7,6 @@ import 'package:billing_system/provider/cart_provider.dart';
 import 'package:billing_system/provider/order_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:billing_system/views/profiles/profile_page.dart';
 
 class AppShell extends StatefulWidget {
   final int initialIndex;
@@ -41,13 +40,17 @@ class _AppShellState extends State<AppShell> {
     const SearchPage(),
     const CartPage(),
     const OrderHistoryPage(),
-    const ProfilePage(),
+    const _ProfilePage(),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(index: _currentIndex, children: _pages),
+      backgroundColor: Colors.white,
+      body: IndexedStack(
+        index: _currentIndex,
+        children: _pages,
+      ),
       bottomNavigationBar: BottomNavBar(
         currentIndex: _currentIndex,
         onTap: (index) {
@@ -55,6 +58,25 @@ class _AppShellState extends State<AppShell> {
             _currentIndex = index;
           });
         },
+      ),
+    );
+  }
+}
+
+class _ProfilePage extends StatelessWidget {
+  const _ProfilePage();
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Center(
+          child: Text(
+            'Profile',
+            style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+        ),
       ),
     );
   }
