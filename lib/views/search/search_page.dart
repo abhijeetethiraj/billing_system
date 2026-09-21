@@ -20,7 +20,6 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     final vm = context.watch<SearchViewModel>();
     return Scaffold(
-      backgroundColor: Colors.white,
 
       body: SafeArea(
         child: SingleChildScrollView(

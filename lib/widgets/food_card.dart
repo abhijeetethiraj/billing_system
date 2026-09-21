@@ -10,6 +10,7 @@ class FoodCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cs = Theme.of(context).colorScheme;
     return GestureDetector(
       onTap: onTap,
 
@@ -18,7 +19,7 @@ class FoodCard extends StatelessWidget {
         margin: const EdgeInsets.only(right: 16),
 
         decoration: BoxDecoration(
-          color: Colors.white,
+          color: cs.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(20),
           boxShadow: [
             BoxShadow(
@@ -49,7 +50,7 @@ class FoodCard extends StatelessWidget {
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         height: 150,
-                        color: Colors.grey.shade200,
+                        color: cs.surfaceContainerHighest,
                         child: const Icon(
                           Icons.fastfood,
                           size: 60,
@@ -67,8 +68,8 @@ class FoodCard extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(6),
 
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
+                    decoration: BoxDecoration(
+                      color: cs.surface,
                       shape: BoxShape.circle,
                     ),
 

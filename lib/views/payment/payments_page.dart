@@ -139,11 +139,7 @@ class _PaymentsPageState extends State<PaymentsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
-        backgroundColor: Colors.white,
-        foregroundColor: Colors.black87,
-        elevation: 0,
         title: const Text('Payment'),
       ),
       body: Center(
